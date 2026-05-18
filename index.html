@@ -3,106 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EarlytaOSint | Dashboard</title>
+    <title>EarlytaOSint | Relational Dashboard</title>
     <style>
-        body {
-            background-color: #0f0f0f;
-            color: #e0e0e0;
-            font-family: 'Courier New', Courier, monospace;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-        }
-        .dashboard {
-            background-color: #1a1a1a;
-            width: 100%;
-            max-width: 800px;
-            border-radius: 8px;
-            box-shadow: 0 4px 25px rgba(0,0,0,0.7);
-            border-top: 4px solid #d4af37;
-            overflow: hidden;
-        }
-        .header {
-            padding: 20px;
-            background-color: #111;
-            border-bottom: 1px solid #333;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .header h1 { margin: 0; color: #d4af37; font-size: 1.5em; }
-        .target-badge {
-            background-color: #2c2c2c;
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-size: 0.85em;
-            color: #ff5555;
-            border: 1px solid #444;
-        }
-        /* Navigasi Menu/Tabs */
-        .nav-tabs {
-            display: flex;
-            background-color: #151515;
-            border-bottom: 1px solid #333;
-        }
-        .tab-link {
-            flex: 1;
-            padding: 12px;
-            text-align: center;
-            background: none;
-            border: none;
-            color: #888;
-            font-family: inherit;
-            cursor: pointer;
-            transition: all 0.3s;
-            border-bottom: 2px solid transparent;
-        }
+        body { background-color: #0f0f0f; color: #e0e0e0; font-family: 'Courier New', Courier, monospace; margin: 0; padding: 20px; display: flex; justify-content: center; }
+        .dashboard { background-color: #1a1a1a; width: 100%; max-width: 800px; border-radius: 8px; box-shadow: 0 4px 25px rgba(0,0,0,0.7); border-top: 4px solid #d4af37; overflow: hidden; }
+        .header { padding: 20px; background-color: #111; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+        .header h1 { margin: 0; color: #d4af37; font-size: 1.4em; }
+        .selector-zone { display: flex; align-items: center; gap: 10px; }
+        select.target-picker { background-color: #252525; color: #ff5555; border: 1px solid #444; padding: 8px; font-family: inherit; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        
+        .nav-tabs { display: flex; background-color: #151515; border-bottom: 1px solid #333; }
+        .tab-link { flex: 1; padding: 12px; text-align: center; background: none; border: none; color: #888; font-family: inherit; cursor: pointer; transition: all 0.3s; border-bottom: 2px solid transparent; }
         .tab-link:hover { color: #fff; background-color: #202020; }
-        .tab-link.active {
-            color: #d4af37;
-            border-bottom: 2px solid #d4af37;
-            background-color: #1a1a1a;
-            font-weight: bold;
-        }
-        /* Konten Tab */
+        .tab-link.active { color: #d4af37; border-bottom: 2px solid #d4af37; background-color: #1a1a1a; font-weight: bold; }
+        
         .tab-content { padding: 25px; display: none; }
         .tab-content.active { display: block; }
-        
-        /* Formulir */
         .form-group { margin-bottom: 18px; }
         label { display: block; margin-bottom: 6px; font-size: 0.9em; color: #aaa; }
-        input[type="text"], textarea, select {
-            width: 100%; padding: 10px; background-color: #252525;
-            border: 1px solid #444; color: #fff; border-radius: 4px;
-            box-sizing: border-box; font-family: inherit;
-        }
+        input[type="text"], textarea, select { width: 100%; padding: 10px; background-color: #252525; border: 1px solid #444; color: #fff; border-radius: 4px; box-sizing: border-box; font-family: inherit; }
         input:focus, textarea:focus, select:focus { border-color: #d4af37; outline: none; }
         
-        button.btn-execute {
-            width: 100%; padding: 12px; background-color: #d4af37; color: #121212;
-            border: none; border-radius: 4px; font-weight: bold; cursor: pointer;
-            font-family: inherit; transition: background 0.3s;
-        }
+        button.btn-execute { width: 100%; padding: 12px; background-color: #d4af37; color: #121212; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; font-family: inherit; transition: background 0.3s; }
         button.btn-execute:hover { background-color: #b5952f; }
         button:disabled { background-color: #444 !important; color: #888; cursor: not-allowed; }
-        
-        .status-log {
-            margin-top: 15px; padding: 10px; background-color: #111;
-            border-radius: 4px; font-size: 0.8em; color: #888; text-align: center;
-        }
+        .status-log { margin-top: 15px; padding: 10px; background-color: #111; border-radius: 4px; font-size: 0.8em; color: #888; text-align: center; }
     </style>
 </head>
 <body>
 
 <div class="dashboard">
     <div class="header">
-        <h1>[ EarlytaOSint v1.0 ]</h1>
-        <div id="activeTargetBadge" class="target-badge">Target: NONE</div>
+        <h1>[ EarlytaOSint v1.1 ]</h1>
+        <div class="selector-zone">
+            <label style="display:inline; margin:0;">Target Aktif:</label>
+            <select id="targetPicker" class="target-picker" onchange="switchActiveTarget(this.value)">
+                <option value="NONE">-- PILIH TARGET --</option>
+            </select>
+        </div>
     </div>
 
     <div class="nav-tabs">
-        <button class="tab-link active" onclick="switchTab(event, 'tab-inisiasi')">1. Inisiasi</button>
+        <button class="tab-link active" onclick="switchTab(event, 'tab-inisiasi')">1. Registrasi Target</button>
         <button class="tab-link" id="menu-footprint" onclick="switchTab(event, 'tab-footprint')" disabled>2. Footprint</button>
         <button class="tab-link" id="menu-behavior" onclick="switchTab(event, 'tab-behavior')" disabled>3. Behavioral Tags</button>
         <button class="tab-link" id="menu-execution" onclick="switchTab(event, 'tab-execution')" disabled>4. Execution Theory</button>
@@ -110,21 +52,25 @@
 
     <div id="tab-inisiasi" class="tab-content active">
         <div class="form-group">
-            <label>Identifier Awal (Username / Email / Keyword)</label>
-            <input type="text" id="init-identifier" placeholder="contoh: ksatria_senja01">
+            <label>Nama Target (Nama Asli / Inisial / Samaran)</label>
+            <input type="text" id="init-nama" placeholder="contoh: John Doe / Target X">
         </div>
         <div class="form-group">
-            <label>Catatan Awal Kasus</label>
-            <textarea id="init-notes" rows="4" placeholder="Tuliskan konteks atau alasan penelusuran..."></textarea>
+            <label>Identifier Awal (Username / Email Utama)</label>
+            <input type="text" id="init-identifier" placeholder="contoh: johndoe_99">
         </div>
-        <button class="btn-execute" id="btn-init" onclick="submitInisiasi()">Kunci & Inisiasi Target</button>
-        <div id="log-inisiasi" class="status-log">Sistem siap menerima entri target baru.</div>
+        <div class="form-group">
+            <label>Catatan Singkat</label>
+            <textarea id="init-notes" rows="3" placeholder="Konteks investigasi awal..."></textarea>
+        </div>
+        <button class="btn-execute" id="btn-init" onclick="submitInisiasi()">Daftarkan Target Baru</button>
+        <div id="log-inisiasi" class="status-log">Sistem siap.</div>
     </div>
 
     <div id="tab-footprint" class="tab-content">
         <div class="form-group">
-            <label>Nama Platform / Media Sosial</label>
-            <input type="text" id="fp-platform" placeholder="Contoh: GitHub, LinkedIn, Instagram">
+            <label>Platform</label>
+            <input type="text" id="fp-platform" placeholder="GitHub, LinkedIn, Instagram, dsb.">
         </div>
         <div class="form-group">
             <label>URL Temuan Jejak</label>
@@ -147,7 +93,7 @@
                 <option value="Low">Rendah (Kemungkinan Kliping Nama)</option>
             </select>
         </div>
-        <button class="btn-execute" onclick="submitFootprint()">Dokumentasikan Jejak (State: RECON)</button>
+        <button class="btn-execute" id="btn-fp" onclick="submitFootprint()">Tambahkan Jejak Tambahan</button>
         <div id="log-footprint" class="status-log">Menunggu input repositori digital.</div>
     </div>
 
@@ -158,17 +104,17 @@
         </div>
         <div class="form-group">
             <label>Gaya Komunikasi / Karakter Bahasa</label>
-            <input type="text" id="bh-gaya" placeholder="Contoh: Formal, Sinis, Menggunakan istilah teknis tingkat tinggi">
+            <input type="text" id="bh-gaya" placeholder="Contoh: Menggunakan istilah teknis tingkat tinggi, puitis">
         </div>
         <div class="form-group">
             <label>Titik Rentan Psikologis (Vulnerability)</label>
-            <textarea id="bh-rentan" rows="2" placeholder="Contoh: Terlalu reaktif jika kompetensi teknisnya dipertanyakan"></textarea>
+            <textarea id="bh-rentan" rows="2" placeholder="Contoh: Terlalu reaktif terhadap kritik kompetensi teknis"></textarea>
         </div>
         <div class="form-group">
             <label>Minat Spesifik / Obsepsi</label>
-            <input type="text" id="bh-minat" placeholder="Contoh: Komunitas OSINT lokal, kolektor kamera analog">
+            <input type="text" id="bh-minat" placeholder="Contoh: Kolektor kamera analog, game engine kuno"></input>
         </div>
-        <button class="btn-execute" onclick="submitBehavior()">Petakan Karakter (State: ANALYZING)</button>
+        <button class="btn-execute" id="btn-bh" onclick="submitBehavior()">Tambahkan Catatan Perilaku</button>
         <div id="log-behavior" class="status-log">Siap menganalisis anomali perilaku target.</div>
     </div>
 
@@ -188,110 +134,159 @@
         <div class="form-group">
             <label>Estimasi Probabilitas Keberhasilan Teoretis</label>
             <select id="ex-probabilitas">
-                <option value="90%">Sangat Tinggi (~90%) - Target Sangat Lengah</option>
-                <option value="60%">Moderat (~60%) - Mengandalkan Kelengahan Sesaat</option>
-                <option value="30%">Rendah (~30%) - Target Memiliki Kesadaran Keamanan Tinggi</option>
+                <option value="90%">Sangat Tinggi (~90%)</option>
+                <option value="60%">Moderat (~60%)</option>
+                <option value="30%">Rendah (~30%)</option>
             </select>
         </div>
-        <button class="btn-execute" onclick="submitExecution()">Selesaikan Profiling (State: PROFILED)</button>
+        <button class="btn-execute" id="btn-ex" onclick="submitExecution()">Simpan Skenario Teoretis</button>
         <div id="log-execution" class="status-log">Menyusun hipotesis eksekusi akhir.</div>
     </div>
 </div>
 
 <script>
     const GAS_URL = "https://script.google.com/macros/s/AKfycbykgN0YNiaV91FgrG-sIJlyQi0k4cncNF7OgT2YURr1t5F6cyILps4TY8fyw-YT69N-4A/exec";
-    let CURRENT_TARGET_ID = null;
+    let CURRENT_TARGET_ID = "NONE";
 
-    // Fungsi Navigasi Tab
+    // Muat daftar target setiap kali halaman dibuka pertama kali
+    window.onload = function() { loadTargetDropdown(); };
+
     function switchTab(evt, tabId) {
         const tabcontents = document.getElementsByClassName("tab-content");
-        for (let i = 0; i < tabcontents.length; i++) {
-            tabcontents[i].className = tabcontents[i].className.replace(" active", "");
-        }
+        for (let i = 0; i < tabcontents.length; i++) tabcontents[i].className = tabcontents[i].className.replace(" active", "");
         const tablinks = document.getElementsByClassName("tab-link");
-        for (let i = 0; i < tablinks.length; i++) {
-            tablinks[i].className = tablinks[i].className.replace(" active", "");
-        }
+        for (let i = 0; i < tablinks.length; i++) tablinks[i].className = tablinks[i].className.replace(" active", "");
         document.getElementById(tabId).className += " active";
         evt.currentTarget.className += " active";
     }
 
-    // Mengaktifkan seluruh menu setelah Target ID didapatkan
-    function unlockWorkflow(targetId) {
-        CURRENT_TARGET_ID = targetId;
-        const badge = document.getElementById("activeTargetBadge");
-        badge.innerText = `Target: ${targetId}`;
-        badge.style.color = "#55ff55";
-        badge.style.borderColor = "#55ff55";
-
-        document.getElementById("menu-footprint").disabled = false;
-        document.getElementById("menu-behavior").disabled = false;
-        document.getElementById("menu-execution").disabled = false;
+    // Fungsi Mengambil Daftar Target dari GAS ke Dropdown UI
+    async function loadTargetDropdown() {
+        const picker = document.getElementById("targetPicker");
+        try {
+            const response = await fetch(GAS_URL, { method: "POST", body: JSON.stringify({ action: "GET_TARGETS" }) });
+            const result = await response.json();
+            if (result.status === "success") {
+                picker.innerHTML = '<option value="NONE">-- PILIH TARGET --</option>';
+                result.targets.forEach(t => {
+                    const option = document.createElement("option");
+                    option.value = t.id;
+                    option.text = `${t.nama} (${t.id}) [${t.state}]`;
+                    picker.appendChild(option);
+                });
+                picker.value = CURRENT_TARGET_ID;
+            }
+        } catch (e) { console.error("Gagal memuat daftar target:", e); }
     }
 
-    // Pemanggilan API Universal ke GAS
-    async function sendToEngine(payload, logElementId, btnElement) {
-        const logEl = document.getElementById(logElementId);
-        if(btnElement) btnElement.disabled = true;
-        logEl.innerText = "Mengirimkan muatan data ke Engine...";
-        logEl.style.color = "#888";
+    // Mekanisme SWITCH TARGET secara dinamis
+    function switchActiveTarget(targetId) {
+        CURRENT_TARGET_ID = targetId;
+        const picker = document.getElementById("targetPicker");
+        
+        if (targetId === "NONE") {
+            picker.style.color = "#ff5555";
+            document.getElementById("menu-footprint").disabled = true;
+            document.getElementById("menu-behavior").disabled = true;
+            document.getElementById("menu-execution").disabled = true;
+        } else {
+            picker.style.color = "#55ff55";
+            document.getElementById("menu-footprint").disabled = false;
+            document.getElementById("menu-behavior").disabled = false;
+            document.getElementById("menu-execution").disabled = false;
+        }
+    }
 
+    async function sendToEngine(payload, logId, btn) {
+        const logEl = document.getElementById(logId);
+        if(btn) btn.disabled = true;
+        logEl.innerText = "Mengirim data ke database...";
+        
         try {
-            const response = await fetch(GAS_URL, {
-                method: "POST",
-                body: JSON.stringify(payload)
-            });
+            const response = await fetch(GAS_URL, { method: "POST", body: JSON.stringify(payload) });
             const result = await response.json();
-            
             if (result.status === "success") {
                 logEl.style.color = "#55ff55";
-                logEl.innerText = `[SUCCESS] ${result.message}`;
+                logEl.innerText = `[BERHASIL] ${result.message}`;
                 return result;
-            } else {
-                throw new Error(result.message);
             }
+            throw new Error(result.message);
         } catch (error) {
             logEl.style.color = "#ff5555";
-            logEl.innerText = `[CRITICAL ERROR] Gagal menulis ke database.`;
-            console.error(error);
+            logEl.innerText = `[ERROR] Gagal memproses data.`;
             return null;
-        } finally {
-            if(btnElement) btnElement.disabled = false;
-        }
+        } finally { if(btn) btn.disabled = false; }
     }
 
-    // 1. Submit Inisiasi Target
+    // 1. Submit Inisiasi Target Baru
     async function submitInisiasi() {
+        const nama = document.getElementById("init-nama").value;
         const identifier = document.getElementById("init-identifier").value;
         const notes = document.getElementById("init-notes").value;
-        if (!identifier) return alert("Identifier wajib diisi!");
+        if (!nama || !identifier) return alert("Nama dan Identifier wajib diisi!");
 
-        const payload = {
-            action: "ADD_TARGET",
-            data: { identifier: identifier, notes: notes }
-        };
-
-        const res = await sendToEngine(payload, "log-inisiasi", document.getElementById("btn-init"));
-        if (res && res.target_id) {
-            unlockWorkflow(res.target_id);
-            document.getElementById("log-inisiasi").innerText += ` Mode Alur Kerja Terbuka.`;
+        const res = await sendToEngine({ action: "ADD_TARGET", data: { nama, identifier, notes } }, "log-inisiasi", document.getElementById("btn-init"));
+        if (res) {
+            document.getElementById("init-nama").value = '';
+            document.getElementById("init-identifier").value = '';
+            document.getElementById("init-notes").value = '';
+            await loadTargetDropdown();
+            switchActiveTarget(res.target_id);
         }
     }
 
-    // Fungsi placeholder untuk pengiriman menu berikutnya (akan kita integrasikan ke GAS di tahap berikutnya)
-    function submitFootprint() {
-        if (!CURRENT_TARGET_ID) return alert("Inisiasi target terlebih dahulu!");
-        alert(`Siap mengirim Jejak untuk ${CURRENT_TARGET_ID}. Kita perlu memperbarui backend GAS untuk menangkap data ini!`);
+    // 2. Submit Footprint (Bisa berkali-kali untuk target aktif yang sama)
+    async function submitFootprint() {
+        if (CURRENT_TARGET_ID === "NONE") return alert("Pilih target aktif di kanan atas terlebih dahulu!");
+        const data = {
+            target_id: CURRENT_TARGET_ID,
+            Platform: document.getElementById("fp-platform").value,
+            URL_Temuan: document.getElementById("fp-url").value,
+            Kategori_Jejak: document.getElementById("fp-kategori").value,
+            Validitas: document.getElementById("fp-validitas").value
+        };
+        const res = await sendToEngine({ action: "ADD_FOOTPRINT", data: data }, "log-footprint", document.getElementById("btn-fp"));
+        if(res) {
+            document.getElementById("fp-platform").value = '';
+            document.getElementById("fp-url").value = '';
+            loadTargetDropdown(); // Refresh dropdown untuk update status FSM visual
+        }
     }
 
-    function submitBehavior() {
-        if (!CURRENT_TARGET_ID) return alert("Inisiasi target terlebih dahulu!");
-        alert(`Siap memetakan perilaku untuk ${CURRENT_TARGET_ID}.`);
+    // 3. Submit Behavior (Bisa berkali-kali untuk target aktif yang sama)
+    async function submitBehavior() {
+        if (CURRENT_TARGET_ID === "NONE") return alert("Pilih target aktif di kanan atas terlebih dahulu!");
+        const data = {
+            target_id: CURRENT_TARGET_ID,
+            Pola_Waktu: document.getElementById("bh-waktu").value,
+            Gaya_Komunikasi: document.getElementById("bh-gaya").value,
+            Titik_Rentan_Psikologis: document.getElementById("bh-rentan").value,
+            Minat_Spesifik: document.getElementById("bh-minat").value
+        };
+        const res = await sendToEngine({ action: "ADD_BEHAVIOR", data: data }, "log-behavior", document.getElementById("btn-bh"));
+        if(res) {
+            document.getElementById("bh-waktu").value = '';
+            document.getElementById("bh-gaya").value = '';
+            document.getElementById("bh-rentan").value = '';
+            document.getElementById("bh-minat").value = '';
+            loadTargetDropdown();
+        }
     }
 
-    function submitExecution() {
-        if (!CURRENT_TARGET_ID) return alert("Inisiasi target terlebih dahulu!");
-        alert(`Skenario eksekusi dirancang untuk ${CURRENT_TARGET_ID}.`);
+    // 4. Submit Execution Theory
+    async function submitExecution() {
+        if (CURRENT_TARGET_ID === "NONE") return alert("Pilih target aktif di kanan atas terlebih dahulu!");
+        const data = {
+            target_id: CURRENT_TARGET_ID,
+            Vektor_Pendekatan: document.getElementById("ex-vektor").value,
+            Skenario_Narasi: document.getElementById("ex-narasi").value,
+            Probabilitas_Sukses: document.getElementById("ex-probabilitas").value
+        };
+        const res = await sendToEngine({ action: "ADD_EXECUTION", data: data }, "log-execution", document.getElementById("btn-ex"));
+        if(res) {
+            document.getElementById("ex-narasi").value = '';
+            loadTargetDropdown();
+        }
     }
 </script>
 
